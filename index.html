@@ -242,13 +242,27 @@
 
                 <label>Date & Time</label><br>
                 <input type="date" id="date" name="date" required>
-                <input type="time" id="time" name="time" required><br>
+                <select id="time" name="time" required>
+                    <option value=""> select time</option>
+                </select><br>
 
                 <label>Location</label><br>
-                <input type="text" name="location" placeholder="Address or area"><br><br>
-
+                <select name="location"required>
+                    <option value=""disabled selected>select one</option>
+                    <option value="minneapolis">minneapolis</option>
+                    <option value="st.paul">st.paul</option>
+                    <option value="columbia heights">columbia heights</option>
+                    <option value="brooklyn center">brooklyn center</option>
+                    <option value="crystal">crystal</option>
+                    <option value="golden valley">golden valley</option>
+                    <option value=" st louis park">st louis park</option>
+                    <option value=" edina">edina</option>
+                    <option value="richfeild">richfield</option>
+                    <option value="other">other</option>
+                </select><br>
+ 
                 <label>Details</label><br>
-                <textarea name="details" placeholder="Tell me what needs to be done..." rows="6" style="width: 300px;"></textarea><br><br>
+                <textarea name="details" placeholder="Tell me what needs to be done..." rows="6" style="width: 300px;"required></textarea><br><br>
 
         
                 <button type="submit">Request Quote</button>
@@ -296,14 +310,27 @@
      const timeInput = document.getElementById("time");
 
 
+
+
+
+     function loadTimes(times) {
+        timeInput.innerHTML = `<option value="">Select time</option>`;
+        times.forEach(t => {
+            timeInput.innerHTML += `<option value="${t}">${t}</option>`;
+        });
+     }
+
+
+     
      dateInput.addEventListener("change", function () {
-     let date = new Date(this.value);
-     let day = date.getDay();
+        timeInput.innerHTML = `<option value="">Select time</option>`;
+        let parts= this.value.split("-");
+        let date = new Date(parts[0],parts[1]-1,parts[2]);
+        let day = date.getDay();
+     
      // 0 = Sunday, 1 = Monday, ... 6 = Saturday
 
-     // reset first
-     timeInput.removeAttribute("min");
-     timeInput.removeAttribute("max");
+     
 
      if (day === 0) {
         // Sunday → no work allowed
@@ -317,14 +344,18 @@
 
      // Monday, Tuesday, Saturday → 6 AM - 2 PM
      if (day === 1 || day === 2 || day === 6) {
-        timeInput.min = "06:00";
-        timeInput.max = "14:00";
+        loadTimes([
+            "06:00 am","07:00 am","08:00 am","09:00 am","10:00 am","11:00 am",
+            "12:00 pm","01:00 pm","02:00 pm"
+        ]);
      }
 
      // Wednesday, Thursday, Friday → 6 AM - 5 PM
      if (day === 3 || day === 4 || day === 5) {
-        timeInput.min = "06:00";
-        timeInput.max = "17:00";
+        loadTimes([
+            "06:00 am","07:00 am","08:00 am","09:00 am","10:00 am","11:00 am",
+            "12:00 pm","01:00 pm","02:00 pm","03:00 pm","04:00 pm","05:00 pm"
+        ])
      }
      });
     </script>
